@@ -1,0 +1,31 @@
+{
+  "name": "pattern-templates",
+  "version": "1.0.0",
+  "description": "Production-grade Creational Design Patterns in TypeScript (Singleton, Factory, Builder)",
+  "type": "module",
+  "scripts": {
+    "demo:singleton": "tsx Creational/Singletone/DBConnection/index.ts",
+    "demo:factory": "tsx Creational/Factory/Developer/index.ts",
+    "demo:computer": "tsx Creational/Builder/3-computer-builder.ts",
+    "demo:http-builder": "tsx Creational/Builder/4-http-client-builder.ts",
+    "demo:http-real": "tsx Creational/Builder/5-http-real-client.ts",
+    "demo:http-retry": "tsx Creational/Builder/6-http-retry-exception.ts",
+    "demo:all": "npm run demo:singleton && npm run demo:factory && npm run demo:computer && npm run demo:http-builder && npm run demo:http-real && npm run demo:http-retry",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "design-patterns",
+    "typescript",
+    "singleton",
+    "factory",
+    "builder",
+    "creational-patterns"
+  ],
+  "author": "Shohnazar Abdusalomov",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "tsx": "^4.23.15",
+    "typescript": "^5.7.2"
+  }
+}
