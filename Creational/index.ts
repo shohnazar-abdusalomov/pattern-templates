@@ -9,3 +9,4 @@
 export * as Singleton from './Singletone/DBConnection/index.js';
 export * as Factory from './Factory/Developer/index.js';
 export * as Builder from './Builder/index.js';
+export * as Prototype from './Prototype/index.js';

@@ -10,7 +10,8 @@
     "demo:http-builder": "tsx Creational/Builder/4-http-client-builder.ts",
     "demo:http-real": "tsx Creational/Builder/5-http-real-client.ts",
     "demo:http-retry": "tsx Creational/Builder/6-http-retry-exception.ts",
-    "demo:all": "npm run demo:singleton && npm run demo:factory && npm run demo:computer && npm run demo:http-builder && npm run demo:http-real && npm run demo:http-retry",
+    "demo:prototype": "tsx Creational/Prototype/game-runner.ts",
+    "demo:all": "npm run demo:singleton && npm run demo:factory && npm run demo:computer && npm run demo:http-builder && npm run demo:http-real && npm run demo:http-retry && npm run demo:prototype",
     "typecheck": "tsc --noEmit"
   },
   "keywords": [
@@ -19,6 +20,7 @@
     "singleton",
     "factory",
     "builder",
+    "prototype",
     "creational-patterns"
   ],
   "author": "Shohnazar Abdusalomov",
