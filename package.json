@@ -11,7 +11,9 @@
     "demo:http-real": "tsx Creational/Builder/5-http-real-client.ts",
     "demo:http-retry": "tsx Creational/Builder/6-http-retry-exception.ts",
     "demo:prototype": "tsx Creational/Prototype/game-runner.ts",
-    "demo:all": "npm run demo:singleton && npm run demo:factory && npm run demo:computer && npm run demo:http-builder && npm run demo:http-real && npm run demo:http-retry && npm run demo:prototype",
+    "demo:doc-prototype": "tsx Creational/Prototype/document-runner.ts",
+    "demo:adapter": "tsx Structural/Adapter/Notification/main.ts",
+    "demo:all": "npm run demo:singleton && npm run demo:factory && npm run demo:computer && npm run demo:http-builder && npm run demo:http-real && npm run demo:http-retry && npm run demo:prototype && npm run demo:doc-prototype && npm run demo:adapter",
     "typecheck": "tsc --noEmit"
   },
   "keywords": [
@@ -21,7 +23,9 @@
     "factory",
     "builder",
     "prototype",
-    "creational-patterns"
+    "adapter",
+    "creational-patterns",
+    "structural-patterns"
   ],
   "author": "Shohnazar Abdusalomov",
   "license": "MIT",
