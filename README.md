@@ -1,182 +1,161 @@
-# 🏗️ Creational Design Patterns in TypeScript
+# 🚀 Design Patterns in TypeScript
 
-Production-grade, clean, and type-safe implementations of **Creational Design Patterns** in TypeScript.
+> Production-grade, type-safe implementations of classic Creational and Structural Design Patterns in **TypeScript** (ESM / NodeNext), accurately ported and adapted from [professorDeveloper/design-patterns](https://github.com/professorDeveloper/design-patterns).
 
-This repository demonstrates the practical application of design patterns in real-world software engineering scenarios with comprehensive interfaces, full type-safety, and standalone executable demonstrations.
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7+-blue.svg)](https://www.typescriptlang.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ---
 
-## 📁 Repository Structure
+## 📂 Project Structure
+
+The repository structure matches the source repository 1:1, organized into **Creational** and **Structural** patterns:
 
 ```text
-pattern-templates/
-├── Creational/
-│   ├── Singletone/                     # Singleton Pattern (Yagona nusxa shabloni)
-│   │   └── DBConnection/
-│   │       ├── db-connection.interface.ts   # Database connection, metrics & query interfaces
-│   │       ├── db-connection.ts             # Thread-safe Singleton implementation
-│   │       └── index.ts                     # Exports & Executable demo
-│   │
-│   ├── Factory/                        # Factory Pattern (Fabrika shabloni)
-│   │   └── Developer/
-│   │       ├── developer.interface.ts       # Developer domain types, roles & budget interfaces
-│   │       ├── developers.ts                # 5 Concrete classes (Frontend, Backend, Mobile, DevOps, FullStack)
-│   │       ├── developer-factory.ts         # Extensible factory with role registry & team cost calculator
-│   │       └── index.ts                     # Exports & Executable demo
-│   │
-│   └── Builder/                        # Builder Pattern (Quruvchi shabloni)
-│       ├── 3-computer-builder.ts            # 3. Computer Builder (Desktop, Gaming, Laptop)
-│       ├── 4-http-client-builder.ts         # 4. Fluent HttpClient Builder & Immutable HttpRequest
-│       ├── 5-http-real-client.ts            # 5. Real HTTP requests (GET, POST, Auth, Headers, Query)
-│       ├── 6-http-retry-exception.ts        # 6. Retry strategy (Backoff) & Typed Custom Exceptions
-│       └── index.ts                         # Unified exports
-│
-├── Builder/                            # Root shortcut linking directly to Builder patterns
-│   ├── 3-computer-builder.ts
-│   ├── 4-http-client-builder.ts
-│   ├── 5-http-real-client.ts
-│   ├── 6-http-retry-exception.ts
-│   └── index.ts
-│
-├── package.json
-├── tsconfig.json
-└── README.md
+src/
+├── creational/
+│   ├── abstractfactory/         # Abstract Factory (Payment & Refund Processors)
+│   │   ├── product/             # PaymentProcessor, RefundProcessor interfaces
+│   │   ├── factory/             # PaymentFactory, ClickFactory, PaymeFactory
+│   │   ├── client/              # CheckoutService client
+│   │   └── main.ts              # Runnable demo
+│   ├── builder/                 # Builder Pattern (CMS Website Builder)
+│   │   ├── cms.enum.ts          # Cms enum (WORDPRESS, TILDA)
+│   │   ├── website.ts           # Website product
+│   │   ├── website-builder.ts   # Abstract WebsiteBuilder
+│   │   ├── simple-website-builder.ts
+│   │   ├── enterprise-website-builder.ts
+│   │   ├── director.ts          # Director orchestrator
+│   │   └── main.ts              # Runnable demo
+│   ├── builder_http/            # Resilient HTTP Client Builder
+│   │   ├── custom-exceptions.ts # ServerError, TimeoutError, NetworkError, etc.
+│   │   ├── nice-response.ts     # Resource<T> (Success / Error wrapper)
+│   │   ├── utils.ts             # URL query parameters manipulation
+│   │   ├── nice-http-client.ts  # NiceHttpClient & NiceHttpClientBuilder
+│   │   └── main.ts              # Runnable demo
+│   ├── prototype/               # Prototype Pattern (Cloning)
+│   │   ├── copiable.interface.ts# Generic Copiable interface
+│   │   ├── project.ts           # Project prototype class
+│   │   ├── copy_type/           # Shallow vs Deep copy demonstration
+│   │   ├── document/            # Document cloning with deep tag list clone
+│   │   └── game/                # GameCharacter cloning with independent inventory
+│   └── singleton/               # Singleton Pattern
+│       ├── database-helper.ts   # DatabaseHelper thread-safe / lazy singleton
+│       ├── programming-logg.ts  # ProgrammingLogg instance singleton
+│       ├── test-object.ts       # Object declaration / constant singleton
+│       └── main.ts              # Runnable demo
+└── structural/
+    ├── adapter/                 # Adapter Pattern
+    │   ├── with_database/       # Adapting legacy JavaApplication to Database interface
+    │   ├── with_email/          # Adapting EmailClient & TelegramClient to NotificationService
+    │   └── with_payment/        # StripePaymentAdapter: UZS to USD cents conversion
+    ├── bridge/                  # Bridge Pattern (Decoupling abstraction & implementation)
+    │   ├── develop/             # Program abstraction bridged with Developer implementors
+    │   ├── device_example/      # BasicRemote bridged with Device (Radio, Tv, XiaomiDeviceAdaptor)
+    │   └── game/                # Game abstraction bridged with Cpp/Java Developers
+    └── composite/               # Composite Pattern
+        └── with_project/        # Team composite managing leaf Developers (Frontend & Backend)
 ```
 
 ---
 
-## 🚀 Patterns Overview
-
-### 1. Singleton Pattern: `DBConnection`
-- **Location:** `Creational/Singletone/DBConnection/`
-- **Purpose:** Guarantees a single database connection instance across the application lifecycle.
-- **Key Highlights:**
-  - Strict private constructor preventing accidental instantiation.
-  - Connection pooling simulation and metrics tracking (uptime, executed queries, active pool).
-  - Transaction wrapper (`BEGIN -> COMMIT / ROLLBACK`).
-  - Safe teardown via `disconnect()` and test utility `resetInstance()`.
-
-```typescript
-import { DBConnection } from './Creational/Singletone/DBConnection/index.js';
-
-const db1 = DBConnection.getInstance({ database: 'fintech_crm_db' });
-const db2 = DBConnection.getInstance();
-
-console.log(db1 === db2); // true (Identical instance)
-await db1.connect();
-const users = await db1.query('SELECT * FROM users');
-```
-
----
-
-### 2. Factory Pattern: `Developer`
-- **Location:** `Creational/Factory/Developer/`
-- **Purpose:** Encapsulates the instantiation of different developer specializations without coupling callers to concrete classes.
-- **5 Developer Roles:**
-  1. `FrontendDeveloper` (Next.js, React, TypeScript, TailwindCSS)
-  2. `BackendDeveloper` (Node.js, NestJS, PostgreSQL, Redis, Kafka)
-  3. `MobileDeveloper` (Flutter, Dart, React Native, Swift, Kotlin)
-  4. `DevOpsEngineer` (Kubernetes, Terraform, AWS, CI/CD, Prometheus)
-  5. `FullStackDeveloper` (TypeScript, React, Node.js, Docker)
-- **Key Highlights:**
-  - Open/Closed Principle via dynamic registry (`DeveloperFactory.registerRole()`).
-  - Batch team creation and automated sprint cost/budget calculator.
-
-```typescript
-import { DeveloperFactory } from './Creational/Factory/Developer/index.js';
-
-const seniorFrontend = DeveloperFactory.createFrontend('Shohnazar', 'SENIOR');
-console.log(seniorFrontend.writeCode('Interactive Dashboard'));
-console.log(seniorFrontend.deploy());
-
-// Create an entire project team with budget calculation
-const team = DeveloperFactory.createTeam([
-  { role: 'FRONTEND', name: 'Alisher', level: 'MID' },
-  { role: 'BACKEND', name: 'Bobur', level: 'SENIOR' },
-  { role: 'DEVOPS', name: 'Rustam', level: 'SENIOR' },
-]);
-
-const budget = DeveloperFactory.calculateTeamBudget(team);
-console.log(`Monthly Team Budget: $${budget.estimatedMonthlyCost}`);
-```
-
----
-
-### 3. Builder Pattern
-- **Location:** `Creational/Builder/` and `Builder/`
-
-#### 3. Computer Builder (`3-computer-builder.ts`)
-- Step-by-step construction of complex computer configurations.
-- Fluent setter methods with defaults (`setRAM`, `setOS`, `setStorage`, `setPointingDevice`, `setKeyboard`).
-- Pre-built configurations for Developer Laptop, Gaming PC, and Workstation.
-
-#### 4. HttpClient Builder (`4-http-client-builder.ts`)
-- Highly configurable, immutable `HttpRequest` builder.
-- Fluent API for query params, headers, authentication (`Bearer`, `Basic`, `ApiKey`), timeouts, and SSL protocol enforcement.
-
-#### 5. HttpClient Real Client (`5-http-real-client.ts`)
-- Real live HTTP executions against JSONPlaceholder.
-- Demonstrated features:
-  - GET with query params, SSL security check, custom headers, and bearer auth.
-  - POST with multi-object payload merging via `setBodies(...)`.
-  - Type-safe generic response parsing: `await request.execute<IPost>()`.
-
-#### 6. HttpClient Retry & Custom Exceptions (`6-http-retry-exception.ts`)
-- Robust typed exception hierarchy:
-  - `HttpClientException` (Base error with timestamp, method, url)
-  - `HttpTimeoutException` (Timeout triggered via `AbortController`)
-  - `HttpStatusException` (HTTP 4xx / 5xx error with status and payload)
-  - `HttpNetworkException` (Underlying socket/DNS/connectivity failures)
-- Exponential backoff retry engine (`delayMs * backoffFactor^(attempt - 1)`).
-- Fail-fast client error protection (4xx errors abort retries immediately).
-
----
-
-## 🛠️ Quickstart & Running Demos
-
-### Prerequisites
-- Node.js (v18+)
-- npm
+## 🛠️ Quick Start
 
 ### Installation
+
 ```bash
 git clone https://github.com/shohnazar-abdusalomov/pattern-templates.git
 cd pattern-templates
 npm install
 ```
 
-### Run All Demos
-```bash
-npm run demo:all
-```
-
-### Run Individual Pattern Demos
-```bash
-# 1. Singleton (DBConnection)
-npm run demo:singleton
-
-# 2. Factory (Developer)
-npm run demo:factory
-
-# 3. Builder (Computer)
-npm run demo:computer
-
-# 4. Builder (HttpClient Builder)
-npm run demo:http-builder
-
-# 5. Builder (Real HTTP Client Calls)
-npm run demo:http-real
-
-# 6. Builder (Retry Strategy & Custom Exceptions)
-npm run demo:http-retry
-```
-
 ### Type Checking
+
 ```bash
 npm run typecheck
 ```
 
+### Run All Pattern Demonstrations
+
+```bash
+npm run demo:all
+```
+
+---
+
+## 📑 Patterns Overview & Demos
+
+### 1. Creational Patterns
+
+| Pattern | Description | Demo Command |
+| :--- | :--- | :--- |
+| **Abstract Factory** | Creates families of related payment and refund processors (`Click` and `Payme`) without specifying concrete classes. | `npm run demo:abstractfactory` |
+| **Builder (Website)** | Step-by-step construction of complex `Website` objects using `Director`, `SimpleWebsiteBuilder`, and `EnterpriseWebsiteBuilder`. | `npm run demo:builder` |
+| **Builder (HTTP)** | Fluent builder for `NiceHttpClient` with headers, query params, retry policies, and structured `Resource<T>` responses. | `npm run demo:builder-http` |
+| **Prototype (Document)** | Clones `Document` instances with isolated tag lists via `DocumentFactory`. | `npm run demo:prototype:doc` |
+| **Prototype (Game)** | Clones `GameCharacter` with independent inventory arrays via `CharacterFactory`. | `npm run demo:prototype:game` |
+| **Prototype (Copy Type)** | Compares shallow vs deep copying behavior with mutable references. | `npm run demo:prototype:copy` |
+| **Singleton** | Enforces single instance creation for `DatabaseHelper`, `ProgrammingLogg`, and frozen `TestObject`. | `npm run demo:singleton` |
+
+### 2. Structural Patterns
+
+| Pattern | Description | Demo Command |
+| :--- | :--- | :--- |
+| **Adapter (Database)** | Adapts legacy `JavaApplication` into the modern `Database` interface. | `npm run demo:adapter:database` |
+| **Adapter (Notification)** | Integrates `EmailClient` and `TelegramClient` into a unified `NotificationService`. | `npm run demo:adapter:email` |
+| **Adapter (Payment)** | Adapts third-party `StripeApi` (cents) to `PaymentProcessor` (UZS) with real-time exchange rates. | `npm run demo:adapter:payment` |
+| **Bridge (Develop)** | Decouples `Program` execution logic from concrete `Developer` implementations (`JavaDeveloper`, `KotlinDeveloper`). | `npm run demo:bridge:develop` |
+| **Bridge (Device)** | Decouples `BasicRemote` controller from devices (`Radio`, `Tv`, and adapted `XiaomiDevice`). | `npm run demo:bridge:device` |
+| **Bridge (Game)** | Bridges `Game` genres (`RacingGame`, `FootballGame`) with game engine developers (`CppDeveloper`, `JavaDeveloper`). | `npm run demo:bridge:game` |
+| **Composite (Project)** | Treats individual `FrontendDeveloper` / `BackendDeveloper` and composite `Team` uniformly. | `npm run demo:composite` |
+
+---
+
+## 🧪 Detailed Pattern Implementations
+
+### Creational: Abstract Factory (`src/creational/abstractfactory`)
+- **Factory Interface:** `PaymentFactory` declares `createPaymentProcessor()` and `createRefundProcessor()`.
+- **Concrete Factories:**
+  - `ClickFactory`: Returns `ClickPaymentProcessor` and `ClickRefundProcessor`.
+  - `PaymeFactory`: Returns `PaymePaymentProcessor` and `PaymeRefundProcessor`.
+- **Client:** `CheckoutService` uses factory composition for decoupled processing.
+
+### Creational: Builder (`src/creational/builder`)
+- **Product:** `Website` with properties `name`, `cms` (`WORDPRESS` or `TILDA`), and `price`.
+- **Builder:** `WebsiteBuilder` provides step-by-step methods: `buildName()`, `buildCms()`, and `buildPrice()`.
+- **Director:** `Director` coordinates builder construction sequence to produce finished products.
+
+### Creational: Resilient HTTP Client (`src/creational/builder_http`)
+- Fluent configuration: `baseUrl`, `cookies`, `headers`, `readTimeout`, `connectionTimeout`, and `retryLimit`.
+- Strong error typing: `ServerError`, `TimeoutError`, `NetworkError`, `InvalidUrlError`, `UnknownError`.
+- Safe functional response container: `Resource.Success<T>` and `Resource.Error`.
+
+### Creational: Prototype (`src/creational/prototype`)
+- Deep copy isolation: Cloned objects guarantee internal array mutability does not leak back to prototype originals.
+- Demonstrated across Document tags and Game Character inventory systems.
+
+### Creational: Singleton (`src/creational/singleton`)
+- `DatabaseHelper.getInstance()`: Guarantees single database connection manager instance.
+- `ProgrammingLogg.getInstance()`: Centralized application logger with equality verification.
+- `TestObject`: Readonly frozen object literal representing constant singleton.
+
+### Structural: Adapter (`src/structural/adapter`)
+- **Database Adapter:** Translates legacy application method calls (`insertObject`) to standardized CRUD interfaces (`insert`, `update`, `delete`, `get`).
+- **Notification Adapter:** Wraps incompatible clients (`EmailClient.sendEmail`, `TelegramClient.sendTelegramMessage`) into `NotificationService.send`.
+- **Payment Adapter:** Converts local currency (UZS) into Stripe's integer cents format using configurable exchange rates.
+
+### Structural: Bridge (`src/structural/bridge`)
+- Prevents Cartesian explosion of class inheritance by separating abstraction hierarchies from implementation hierarchies:
+  - `Program` (abstraction) ⇄ `Developer` (implementation).
+  - `BasicRemote` (abstraction) ⇄ `Device` (implementation).
+  - `Game` (abstraction) ⇄ `Developer` (implementation).
+
+### Structural: Composite (`src/structural/composite`)
+- `Team` acts as a composite containing developer leaves (`FrontendDeveloper`, `BackendDeveloper`).
+- Invocations like `createProject()` transparently delegate across all tree components.
+
 ---
 
 ## 📄 License
+
 MIT © [Shohnazar Abdusalomov](https://github.com/shohnazar-abdusalomov)
